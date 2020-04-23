@@ -1,0 +1,50 @@
+<PreferenceScreen
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+            app:title="搜索">
+
+        <EditTextPreference
+                app:key="search_template"
+                app:title="搜索模板"
+                app:defaultValue="https://m.baidu.com/s?word=%s"
+                app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+                app:key="search_package"
+                app:title="浏览器包名"
+                app:useSimpleSummaryProvider="true"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            app:title="翻译">
+
+        <EditTextPreference
+                app:key="translate_app_id"
+                app:title="APP ID"
+                app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+                app:key="translate_secret_key"
+                app:title="密钥"
+                app:useSimpleSummaryProvider="true"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            app:title="OCR">
+
+        <EditTextPreference
+                app:key="ocr_app_id"
+                app:title="API Key"
+                app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+                app:key="ocr_secret_key"
+                app:title="Secret Key"
+                app:useSimpleSummaryProvider="true"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

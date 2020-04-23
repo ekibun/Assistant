@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Assistant</string>
+    <string name="hint_input_message">输入消息</string>
+    <string name="toast_copied">已复制到剪贴板</string>
+
+    <string name="title_activity_settings">设置</string>
+</resources>
