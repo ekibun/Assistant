@@ -4,6 +4,9 @@ import android.graphics.Bitmap
 import com.google.zxing.*
 import com.google.zxing.common.HybridBinarizer
 import com.google.zxing.qrcode.QRCodeReader
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.PublishSubject
 import soko.ekibun.assistant.CardAdapter
 import soko.ekibun.assistant.R
 import soko.ekibun.assistant.action.AssistAction
@@ -31,20 +34,26 @@ class ScreenQrCard(cardAdapter: CardAdapter) : AssistCard(cardAdapter) {
         return result
     }
 
+    private val decodeSubject = PublishSubject.create<Bitmap>().also { subject ->
+        subject.subscribeOn(Schedulers.io())
+            .map {bitmap ->
+                decode(bitmap)?.text?:""
+            }.filter { it.isNotEmpty() }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe{ result ->
+                updateCard(result, listOf(
+                    AssistAction.build("打开") { context ->
+                        AppUtil.open(context, result)
+                        true
+                    },
+                    AssistAction.build("复制") { context ->
+                        AppUtil.copy(context, result)
+                        false
+                    }))
+            }
+    }
+
     override fun processScreenshot(bitmap: Bitmap) {
-        Thread {
-            val result = decode(bitmap)?: return@Thread
-            val resultString = result.text?: return@Thread
-            if(resultString.isEmpty()) return@Thread
-            updateCard(resultString, listOf(
-                AssistAction.build("打开") { context ->
-                    AppUtil.open(context, resultString)
-                    true
-                },
-                AssistAction.build("复制") { context ->
-                    AppUtil.copy(context, resultString)
-                    false
-                }))
-        }.start()
+        decodeSubject.onNext(bitmap)
     }
 }

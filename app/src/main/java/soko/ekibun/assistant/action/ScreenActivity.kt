@@ -28,7 +28,7 @@ import kotlin.math.roundToInt
 
 class ScreenActivity : AppCompatActivity() {
 
-    private val share by lazy { intent.getBooleanExtra(EXTRA_SHARE, false) }
+    val share by lazy { intent.getBooleanExtra(EXTRA_SHARE, false) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +55,6 @@ class ScreenActivity : AppCompatActivity() {
         window.attributes.dimAmount = 0.6f
         window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
 
-
         if (share) {
             val contentUri = FileProvider.getUriForFile(this, "soko.ekibun.assistant.fileprovider", File(screenshotFile))
             if (contentUri != null) {
@@ -64,10 +63,8 @@ class ScreenActivity : AppCompatActivity() {
                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION) // temp permission for receiving app to read this file
                 shareIntent.setDataAndType(contentUri, "image/*")
                 shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
-                startActivity(Intent.createChooser(shareIntent, "分享图片")
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                startActivity(Intent.createChooser(shareIntent, "分享图片"))
             }
-
         } else {
             val sp= PreferenceManager.getDefaultSharedPreferences(this)
             val appid = sp.getString("ocr_app_id", null)?:""
@@ -117,17 +114,20 @@ class ScreenActivity : AppCompatActivity() {
         item_message.text = selectString
     }
 
+    var flag = false
+    override fun onPause() {
+        super.onPause()
+        flag = true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(share && flag) finish()
+    }
+
     override fun onStop() {
         super.onStop()
         finish()
-    }
-
-    // 分享时，第二次获得焦点的时候关闭窗口
-    var flag = false
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        if(flag && hasFocus) finish()
-        if(share && !flag && !hasFocus) flag = true
     }
 
     companion object {

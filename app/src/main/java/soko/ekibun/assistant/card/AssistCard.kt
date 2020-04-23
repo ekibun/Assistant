@@ -9,18 +9,18 @@ abstract class AssistCard(private val cardAdapter: CardAdapter) {
     abstract val title: String
     abstract val icon: Int
 
-    fun updateCard(message: String, actions: List<AssistAction>){ cardAdapter.runOnUiThread {
+    fun updateCard(message: String, actions: List<AssistAction>) {
         val data = cardAdapter.data
         data.removeAll { it.title == title }
         data.add(0, CardData(title, icon, message, actions))
         cardAdapter.setNewInstance(data.toMutableList())
-    } }
+    }
 
-    fun removeCard(){ cardAdapter.runOnUiThread {
+    fun removeCard() {
         val data = cardAdapter.data
         data.removeAll { it.title == title }
         cardAdapter.setNewInstance(data.toMutableList())
-    } }
+    }
 
     open fun processScreenshot(bitmap: Bitmap) {
 

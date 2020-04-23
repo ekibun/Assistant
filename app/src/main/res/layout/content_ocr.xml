@@ -10,12 +10,14 @@
             app:layout_constraintBottom_toTopOf="@+id/item_info"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="2dp"
             android:layout_marginBottom="8dp"
             android:padding="12dp"
             android:background="?android:colorBackground"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:adjustViewBounds="true"
+            android:elevation="1dp"
             tools:ignore="ContentDescription"/>
     <FrameLayout
             android:id="@+id/item_container"
@@ -25,6 +27,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/item_image"
             app:layout_constraintStart_toStartOf="@+id/item_image"
             app:layout_constraintEnd_toEndOf="@+id/item_image"
+            android:elevation="1dp"
             android:layout_margin="12dp"
 
      />

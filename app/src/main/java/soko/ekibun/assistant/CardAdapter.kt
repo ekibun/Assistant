@@ -1,7 +1,5 @@
 package soko.ekibun.assistant
 
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -16,12 +14,6 @@ import soko.ekibun.assistant.card.AssistCard
  */
 class CardAdapter(data: MutableList<AssistCard.CardData>? = null, val runAction: (AssistAction) -> Unit) :
     BaseQuickAdapter<AssistCard.CardData, BaseViewHolder>(R.layout.item_card, data) {
-
-    private val handler = Handler()
-    fun runOnUiThread (action: () -> Unit) {
-        if(Looper.myLooper() != Looper.getMainLooper()) handler.post(action)
-        else action()
-    }
 
     override fun convert(holder: BaseViewHolder, item: AssistCard.CardData) {
         holder.itemView.item_icon.setImageResource(item.icon)
