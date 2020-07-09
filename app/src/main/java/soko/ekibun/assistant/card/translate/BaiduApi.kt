@@ -1,8 +1,7 @@
 package soko.ekibun.assistant.card.translate
 
 import android.util.Log
-import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
-import io.reactivex.rxjava3.core.Observable
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -20,7 +19,7 @@ interface BaiduApi {
         @Field("appid") appid: String?,
         @Field("salt") salt: String?,
         @Field("sign") sign: String?
-    ): Observable<RespondBean>
+    ): Call<RespondBean>
 
     companion object {
         private const val SERVER_API = "https://fanyi-api.baidu.com"
@@ -30,7 +29,6 @@ interface BaiduApi {
         fun createInstance(): BaiduApi{
             return Retrofit.Builder().baseUrl(SERVER_API)
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .build().create(BaiduApi::class.java)
         }
 
@@ -54,7 +52,7 @@ interface BaiduApi {
             }
         }
 
-        fun translate(text: String, appid: String, key: String): Observable<RespondBean>{
+        fun translate(text: String, appid: String, key: String): Call<RespondBean>{
             val salt = (Math.random() * 100 + 1).toInt().toString() //随机数 这里范围是[0,100]整数 无强制要求
             val sign = getMD5Code(appid + text + salt + key)
             Log.v("sign", sign)

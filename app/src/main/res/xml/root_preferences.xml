@@ -45,6 +45,20 @@
                 app:title="Secret Key"
                 app:useSimpleSummaryProvider="true"/>
 
+
+        <ListPreference
+                app:key="ocr_language"
+                app:title="语言"
+                app:defaultValue="CHN_ENG"
+                app:entries="@array/ocr_language"
+                app:entryValues="@array/ocr_language_value"
+                app:useSimpleSummaryProvider="true"/>
+
+        <SwitchPreference
+                app:key="ocr_detect_language"
+                app:defaultValue="true"
+                app:title="检测语言"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

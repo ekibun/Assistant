@@ -25,21 +25,21 @@ import soko.ekibun.assistant.util.AppUtil
 
 class AssistInteractionSession constructor(context: Context) : VoiceInteractionSession(context) {
 
-    val sp by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
+    private val sp by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
 
     private fun handleAction(action: AssistAction) {
         if(action.run(context)) hide()
     }
 
-    internal val actionAdapter = ActionAdapter().also {
+    private val actionAdapter = ActionAdapter().also {
         it.setOnItemClickListener { _, _, position -> handleAction(it.data[position]) }
     }
 
-    internal val cardAdapter = CardAdapter(null, ::handleAction)
+    private val cardAdapter = CardAdapter(null, ::handleAction)
 
     private val assistCards = listOf(
         ScreenQrCard(cardAdapter),
-        TranslateCard(this),
+        TranslateCard(actionAdapter, cardAdapter, context),
         CalculatorCard(cardAdapter),
         AppLauncherCard(context, cardAdapter)
     )
@@ -103,11 +103,6 @@ class AssistInteractionSession constructor(context: Context) : VoiceInteractionS
         mContentView.input_message.requestFocus()
         window.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
         window.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED)
-    }
-
-    override fun onHandleAssist(state: AssistState) {
-        super.onHandleAssist(state)
-        Log.v("assist", state.toString())
     }
 
     override fun onHandleScreenshot(screenshot: Bitmap?) {

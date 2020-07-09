@@ -29,8 +29,24 @@
             app:layout_constraintEnd_toEndOf="@+id/item_image"
             android:elevation="1dp"
             android:layout_margin="12dp"
-
      />
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_card"
+            app:layout_constraintBottom_toTopOf="@+id/item_info"
+            app:layout_constraintStart_toStartOf="@+id/item_info"
+            app:layout_constraintEnd_toEndOf="@+id/item_info"
+            android:overScrollMode="never"
+            android:clipToPadding="false"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:orientation="vertical"
+            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:reverseLayout="true"
+            tools:itemCount="1"
+            android:elevation="1dp"
+            tools:listitem="@layout/item_card"/>
     <LinearLayout
             android:id="@+id/item_info"
             android:visibility="invisible"
@@ -38,6 +54,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:clickable="true"
+            android:elevation="30dp"
             android:background="@drawable/bg_round_dialog"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

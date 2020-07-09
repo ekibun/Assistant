@@ -6,9 +6,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import net.sourceforge.pinyin4j.PinyinHelper
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType
@@ -16,6 +15,7 @@ import soko.ekibun.assistant.CardAdapter
 import soko.ekibun.assistant.R
 import soko.ekibun.assistant.action.AssistAction
 import soko.ekibun.assistant.card.AssistCard
+import soko.ekibun.assistant.util.CoroutineUtil
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -74,20 +74,15 @@ class AppLauncherCard(val context: Context, cardAdapter: CardAdapter) : AssistCa
         }
     }
 
-    private val appListSubject = PublishSubject.create<String>().also { subject ->
-        subject.filter { it.isNotEmpty() }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { text ->
-                appList.filter { it.matcher(text) }.map { it.action }
-            }.subscribe{ result ->
-                if(result.isEmpty()) removeCard()
-                else updateCard("", result)
-            }
-    }
-
     override fun processTextChange(text: String) {
         if(text.isEmpty()) removeCard()
-        appListSubject.onNext(text.toLowerCase(Locale.ROOT))
+        CoroutineUtil.subscribe {
+            val txt = text.toLowerCase(Locale.ROOT)
+            if(txt.isEmpty()) return@subscribe removeCard()
+            val result = withContext(Dispatchers.IO) {
+                appList.filter { it.matcher(txt) }.map { it.action } }
+            if(result.isEmpty()) removeCard()
+            else updateCard("", result)
+        }
     }
 }

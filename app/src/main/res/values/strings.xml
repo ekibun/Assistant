@@ -4,4 +4,30 @@
     <string name="toast_copied">已复制到剪贴板</string>
 
     <string name="title_activity_settings">设置</string>
+
+    <string-array name="ocr_language">
+        <item>中英文混合</item>
+        <item>英文</item>
+        <item>日语</item>
+        <item>韩语</item>
+        <item>法语</item>
+        <item>西班牙语</item>
+        <item>葡萄牙语</item>
+        <item>德语</item>
+        <item>意大利语</item>
+        <item>俄语</item>
+    </string-array>
+
+    <string-array name="ocr_language_value">
+        <item>CHN_ENG</item>
+        <item>ENG</item>
+        <item>JAP</item>
+        <item>KOR</item>
+        <item>FRE</item>
+        <item>SPA</item>
+        <item>POR</item>
+        <item>GER</item>
+        <item>ITA</item>
+        <item>RUS</item>
+    </string-array>
 </resources>

@@ -1,7 +1,6 @@
 package soko.ekibun.assistant.action
 
-import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
-import io.reactivex.rxjava3.core.Observable
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Field
@@ -17,14 +16,16 @@ interface OcrApi {
         @Field("client_id") client_id: String,
         @Field("client_secret") client_secret: String,
         @Field("grant_type") grant_type: String = "client_credentials"
-    ): Observable<OauthToken>
+    ): Call<OauthToken>
 
     @POST("/rest/2.0/ocr/v1/general")
     @FormUrlEncoded
     fun ocrImage(
         @Query("access_token") access_token: String,
-        @Field("image") image: String
-    ): Observable<OcrResult>
+        @Field("image") image: String,
+        @Field("language_type") language_type: String,
+        @Field("detect_language") detect_language: Boolean
+    ): Call<OcrResult>
 
     companion object {
         const val SERVER_API = "https://aip.baidubce.com"
@@ -34,7 +35,6 @@ interface OcrApi {
         fun createInstance(): OcrApi {
             return Retrofit.Builder().baseUrl(SERVER_API)
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .build().create(OcrApi::class.java)
         }
     }

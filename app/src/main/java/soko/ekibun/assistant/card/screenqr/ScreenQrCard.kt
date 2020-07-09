@@ -4,14 +4,14 @@ import android.graphics.Bitmap
 import com.google.zxing.*
 import com.google.zxing.common.HybridBinarizer
 import com.google.zxing.qrcode.QRCodeReader
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import soko.ekibun.assistant.CardAdapter
 import soko.ekibun.assistant.R
 import soko.ekibun.assistant.action.AssistAction
 import soko.ekibun.assistant.card.AssistCard
 import soko.ekibun.assistant.util.AppUtil
+import soko.ekibun.assistant.util.CoroutineUtil
 import soko.ekibun.assistant.util.ImageUtil
 import java.util.*
 
@@ -34,26 +34,19 @@ class ScreenQrCard(cardAdapter: CardAdapter) : AssistCard(cardAdapter) {
         return result
     }
 
-    private val decodeSubject = PublishSubject.create<Bitmap>().also { subject ->
-        subject.subscribeOn(Schedulers.io())
-            .map {bitmap ->
-                decode(bitmap)?.text?:""
-            }.filter { it.isNotEmpty() }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe{ result ->
-                updateCard(result, listOf(
-                    AssistAction.build("打开") { context ->
-                        AppUtil.open(context, result)
-                        true
-                    },
-                    AssistAction.build("复制") { context ->
-                        AppUtil.copy(context, result)
-                        false
-                    }))
-            }
-    }
-
     override fun processScreenshot(bitmap: Bitmap) {
-        decodeSubject.onNext(bitmap)
+        CoroutineUtil.subscribe(key = "screen_qr") {
+            val result = withContext(Dispatchers.IO) { decode(bitmap)?.text?:"" }
+            if (result.isEmpty()) removeCard()
+            else updateCard(result, listOf(
+                AssistAction.build("打开") { context ->
+                    AppUtil.open(context, result)
+                    true
+                },
+                AssistAction.build("复制") { context ->
+                    AppUtil.copy(context, result)
+                    false
+                }))
+        }
     }
 }

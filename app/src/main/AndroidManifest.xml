@@ -27,8 +27,7 @@
 
         <service
                 android:name=".AssistInteractionService"
-                android:permission="android.permission.BIND_VOICE_INTERACTION"
-                android:process=":interactor">
+                android:permission="android.permission.BIND_VOICE_INTERACTION">
             <meta-data
                     android:name="android.voice_interaction"
                     android:resource="@xml/interaction_service"/>
